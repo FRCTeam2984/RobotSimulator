@@ -1,4 +1,4 @@
-package io.github.frcteam2984.simulator;
+package io.github.frcteam2984.simulator.world;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,26 +18,32 @@ public class World extends Observable {
 	private List<Entity> entities;
 	
 	/**
+	 * The field which the world contains
+	 */
+	private Field field;
+	
+	/**
 	 * Constructs a new empty world
 	 */
 	public World(){
 		this.entities = new ArrayList<Entity>();
+		this.field = new Field();
 	}
-
+	
 	/**
 	 * returns the width of the world in inches
 	 * @return the width of the world in inches
 	 */
-	public int getWidth() {
-		return 0;
+	public double getWidth() {
+		return this.field.getWidth();
 	}
 
 	/**
-	 * returns the height of the world in inches
-	 * @return the height of the world in inches
+	 * returns the length of the world in inches
+	 * @return the length of the world in inches
 	 */
-	public double getHeight() {
-		return 0;
+	public double getLength() {
+		return this.field.getLength();
 	}
 
 	/**
@@ -46,6 +52,14 @@ public class World extends Observable {
 	 */
 	public List<Entity> getEntities() {
 		return this.entities;
+	}
+
+	/**
+	 * Adds an entity to the world
+	 * @param entity the entity to add
+	 */
+	public void addEntity(Entity entity) {
+		this.entities.add(entity);
 	}
 	
 }

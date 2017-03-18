@@ -9,8 +9,8 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import io.github.frcteam2984.simulator.Entity;
-import io.github.frcteam2984.simulator.World;
+import io.github.frcteam2984.simulator.world.Entity;
+import io.github.frcteam2984.simulator.world.World;
 
 /**
  * A panel to do the rendering of the field and its elements
@@ -45,7 +45,7 @@ public class SimulationPane extends JPanel implements Observer{
 	 */
 	public SimulationPane(){
 		this.renderManager = RenderManager.getInstance();
-		this.setBackground(new Color(0x030303));
+		this.setBackground(new Color(0xFFFFFF));
 		this.scale = 1;
 		this.x = 0;
 		this.y = 0;
@@ -69,6 +69,7 @@ public class SimulationPane extends JPanel implements Observer{
 		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(world == null)
 			return;
+		DrawingUtils.drawCenteredRectangle(g, 0, 0, world.getLength(), world.getWidth(), new Color(0));
 		for(Entity entity : world.getEntities()){
 			RenderHandler<? extends Entity> handler = this.renderManager.getHandler(entity);
 			handler.renderManaged(g, entity);

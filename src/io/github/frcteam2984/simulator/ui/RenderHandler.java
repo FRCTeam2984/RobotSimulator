@@ -2,7 +2,7 @@ package io.github.frcteam2984.simulator.ui;
 
 import java.awt.Graphics;
 
-import io.github.frcteam2984.simulator.Entity;
+import io.github.frcteam2984.simulator.world.Entity;
 
 /**
  * the default render handler that draws a circle at the position of the entity

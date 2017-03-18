@@ -3,7 +3,7 @@ package io.github.frcteam2984.simulator.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.frcteam2984.simulator.Entity;
+import io.github.frcteam2984.simulator.world.Entity;
 
 /**
  * a class to store the handler for the rendering of the entities that are to be rendered on the screen
