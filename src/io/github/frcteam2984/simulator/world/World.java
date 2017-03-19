@@ -61,5 +61,13 @@ public class World extends Observable {
 	public void addEntity(Entity entity) {
 		this.entities.add(entity);
 	}
+
+	/**
+	 * Simulates the world
+	 */
+	public void simulate() {
+		this.setChanged();
+		this.notifyObservers();		
+	}
 	
 }
