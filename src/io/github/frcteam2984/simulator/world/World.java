@@ -23,11 +23,17 @@ public class World extends Observable {
 	private Field field;
 	
 	/**
+	 * The robot which is currently active
+	 */
+	private Robot robot;
+	
+	/**
 	 * Constructs a new empty world
 	 */
 	public World(){
 		this.entities = new ArrayList<Entity>();
 		this.field = new Field();
+		this.robot = new Robot();
 	}
 	
 	/**
@@ -60,6 +66,22 @@ public class World extends Observable {
 	 */
 	public void addEntity(Entity entity) {
 		this.entities.add(entity);
+	}
+	
+	/**
+	 * Returns the field of the world
+	 * @return the field
+	 */
+	public Field getField(){
+		return this.field;
+	}
+	
+	/**
+	 * Returns the robot which is active
+	 * @return the robot
+	 */
+	public Robot getRobot(){
+		return this.robot;
 	}
 
 	/**

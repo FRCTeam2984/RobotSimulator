@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -69,7 +70,12 @@ public class SimulationPane extends JPanel implements Observer{
 		((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if(world == null)
 			return;
-		DrawingUtils.drawCenteredRectangle(g, 0, 0, world.getLength(), world.getWidth(), new Color(0));
+		double width = this.getWidth();
+		double height = this.getHeight();
+		((Graphics2D)g).translate(width/2, height/2);
+		for(Shape shape : world.getField().getDrawingPaths()){
+			((Graphics2D)g).draw(shape);
+		}
 		for(Entity entity : world.getEntities()){
 			RenderHandler<? extends Entity> handler = this.renderManager.getHandler(entity);
 			handler.renderManaged(g, entity);

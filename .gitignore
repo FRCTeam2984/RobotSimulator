@@ -42,6 +42,7 @@ Thumbs.db
 bin/
 build/
 dist/
+lib/
 build.properties
 build.xml
 sysProps.xml
