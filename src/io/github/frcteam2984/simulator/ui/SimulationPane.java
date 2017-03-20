@@ -31,11 +31,6 @@ public class SimulationPane extends JPanel implements Observer{
 	private World world;
 
 	/**
-	 * an instance of the render manager that is used to get the render handler for each of the entities
-	 */
-	private RenderManager renderManager;
-
-	/**
 	 * the scale, x, and y
 	 */
 	private double scale, x, y;
@@ -45,7 +40,6 @@ public class SimulationPane extends JPanel implements Observer{
 	 * class using the {@link io.github.frcteam2984.simulator.ui.RenderManager#getInstance() getInstance} method
 	 */
 	public SimulationPane(){
-		this.renderManager = RenderManager.getInstance();
 		this.setBackground(new Color(0xFFFFFF));
 		this.scale = 1;
 		this.x = 0;
@@ -77,8 +71,6 @@ public class SimulationPane extends JPanel implements Observer{
 			((Graphics2D)g).draw(shape);
 		}
 		for(Entity entity : world.getEntities()){
-			RenderHandler<? extends Entity> handler = this.renderManager.getHandler(entity);
-			handler.renderManaged(g, entity);
 		}
 	}
 

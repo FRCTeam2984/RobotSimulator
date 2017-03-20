@@ -1,5 +1,6 @@
 package io.github.frcteam2984.simulator.world;
 
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
@@ -43,6 +44,9 @@ public class FieldElement {
 			this.drawingPolygon.lineTo(point.getDouble("x"), point.getDouble("y"));
 		}
 		this.drawingPolygon.closePath();
+		AffineTransform transform = new AffineTransform();
+		transform.translate(this.position.getX(), this.position.getY());
+		this.drawingPolygon.transform(transform);
 	}
 
 	/**

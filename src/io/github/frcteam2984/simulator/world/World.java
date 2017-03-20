@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import org.json.JSONObject;
+
 /**
  * The simulation world which contains the robot, the field, and all entities.
  * Entities are considered field interactive objects such as gears and fuel.
@@ -33,6 +35,15 @@ public class World extends Observable {
 	public World(){
 		this.entities = new ArrayList<Entity>();
 		this.field = new Field();
+		this.robot = new Robot();
+	}
+	
+	/**
+	 * Constructs a new world based on the json object
+	 */
+	public World(JSONObject json){
+		this.entities = new ArrayList<Entity>();
+		this.field = new Field(json.getJSONObject("field"));
 		this.robot = new Robot();
 	}
 	
