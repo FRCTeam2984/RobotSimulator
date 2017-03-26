@@ -1,11 +1,14 @@
 package io.github.frcteam2984.simulator.world;
 
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
 import org.json.JSONObject;
 
 /**
@@ -94,8 +97,51 @@ public class Field {
 	 * Returns a list of shapes which make up the collision elements, this excludes the other perimeter of the field
 	 * @return the collision shapes of the field
 	 */
-	public List<Shape> getCollisionShapes(){
-		return null;
+	public List<CompleteBodyDefinition> getCollisionShapes(){
+		List<CompleteBodyDefinition> definitions = new ArrayList<CompleteBodyDefinition>();
+		for(FieldElement element : this.fieldElements){
+			definitions.add(element.getBodyDefinition());
+		}
+		definitions.addAll(this.getWalls());
+		return definitions;
+	}
+	
+	private List<CompleteBodyDefinition> getWalls(){
+		float wallWidth = 10;
+		
+		FixtureDef widthWalls = new FixtureDef();
+		PolygonShape widthWallShape = new PolygonShape();
+		widthWallShape.setAsBox(wallWidth + 2 * wallWidth, (float) this.width);
+		widthWalls.shape = widthWallShape;
+		
+		FixtureDef lengthWalls = new FixtureDef();
+		PolygonShape lengthWallShape = new PolygonShape();
+		lengthWallShape.setAsBox((float) this.length, wallWidth);
+		lengthWalls.shape = lengthWallShape;
+		
+		BodyDef topWall = new BodyDef();
+		topWall.type = BodyType.STATIC;
+		topWall.position.set(0, (float)(-this.width/2 - wallWidth/2));
+		
+		BodyDef rightWall = new BodyDef();
+		rightWall.type = BodyType.STATIC;
+		rightWall.position.set((float)(this.length/2 + wallWidth/2), 0);
+		
+		BodyDef bottomWall = new BodyDef();
+		bottomWall.type = BodyType.STATIC;
+		bottomWall.position.set(0, (float)(this.width/2 + wallWidth/2));
+		
+		BodyDef leftWall = new BodyDef();
+		leftWall.type = BodyType.STATIC;
+		leftWall.position.set((float)(-this.length/2 - wallWidth/2), 0);
+		
+		List<CompleteBodyDefinition> walls = new ArrayList<CompleteBodyDefinition>();
+		walls.add(new CompleteBodyDefinition(topWall, lengthWalls));
+		walls.add(new CompleteBodyDefinition(bottomWall, lengthWalls));
+		walls.add(new CompleteBodyDefinition(leftWall, widthWalls));
+		walls.add(new CompleteBodyDefinition(rightWall, widthWalls));
+
+		return walls;
 	}
 	
 }

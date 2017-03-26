@@ -10,8 +10,9 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import io.github.frcteam2984.simulator.world.Entity;
-import io.github.frcteam2984.simulator.world.World;
+import org.jbox2d.dynamics.World;
+
+import io.github.frcteam2984.simulator.world.SimulationWorld;
 
 /**
  * A panel to do the rendering of the field and its elements
@@ -28,7 +29,7 @@ public class SimulationPane extends JPanel implements Observer{
 	/**
 	 * a local instance of the world
 	 */
-	private World world;
+	private SimulationWorld world;
 
 	/**
 	 * the scale, x, and y
@@ -70,8 +71,6 @@ public class SimulationPane extends JPanel implements Observer{
 		for(Shape shape : world.getField().getDrawingPaths()){
 			((Graphics2D)g).draw(shape);
 		}
-		for(Entity entity : world.getEntities()){
-		}
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class SimulationPane extends JPanel implements Observer{
 	 */
 	@Override
 	public void update(Observable world, Object message) {
-		this.world = (World) world;
+		this.world = (SimulationWorld) world;
 		repaint();
 	}
 

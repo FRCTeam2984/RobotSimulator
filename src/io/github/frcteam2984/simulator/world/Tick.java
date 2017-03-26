@@ -23,14 +23,14 @@ public class Tick extends Observable implements ActionListener{
 	/**
 	 * the world that gets simulated
 	 */
-	private World world;
+	private SimulationWorld world;
 	
 	/**
 	 * the constructor to create a new tick
 	 * @param delay the delay between ticks
 	 * @param world the world to update
 	 */
-	public Tick(World world){
+	public Tick(SimulationWorld world){
 		this.world = world;
 		timer = new Timer(DEFAULT_DELAY, this);
 		timer.start();

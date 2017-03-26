@@ -6,8 +6,8 @@ import java.util.Scanner;
 import org.json.JSONObject;
 
 import io.github.frcteam2984.simulator.ui.SimulatorFrame;
+import io.github.frcteam2984.simulator.world.SimulationWorld;
 import io.github.frcteam2984.simulator.world.Tick;
-import io.github.frcteam2984.simulator.world.World;
 
 public class Main {
 
@@ -19,7 +19,7 @@ public class Main {
 			content = scanner.useDelimiter("\\Z").next();
 			scanner.close();
 		} catch(Exception e){}
-		World world = new World(new JSONObject(content));
+		SimulationWorld world = new SimulationWorld(new JSONObject(content));
 		Tick tick = new Tick(world);
 		tick.start();
 		SimulatorFrame frame = new SimulatorFrame(world);

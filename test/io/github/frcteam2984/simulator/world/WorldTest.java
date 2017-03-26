@@ -12,17 +12,11 @@ import org.junit.Test;
  */
 public class WorldTest {
 
-	private World world;
+	private SimulationWorld world;
 	
 	@Before
 	public void before(){
-		this.world = new World();
-	}
-	
-	@Test
-	public void addEntityAddsTheEntity(){
-		this.world.addEntity(new Entity());
-		assertEquals(this.world.getEntities().size(), 1);
+		this.world = new SimulationWorld();
 	}
 	
 }

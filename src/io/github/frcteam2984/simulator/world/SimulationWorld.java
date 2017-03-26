@@ -1,9 +1,12 @@
 package io.github.frcteam2984.simulator.world;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.World;
 import org.json.JSONObject;
 
 /**
@@ -12,12 +15,14 @@ import org.json.JSONObject;
  * @author Max Apodaca
  *
  */
-public class World extends Observable {
+public class SimulationWorld extends Observable {
 
+	private static final float TIME_STEP = 1/60f;
+	
 	/**
-	 * A list of the non-static entities.
+	 * The JBox2d world
 	 */
-	private List<Entity> entities;
+	private World world;
 	
 	/**
 	 * The field which the world contains
@@ -30,21 +35,16 @@ public class World extends Observable {
 	private Robot robot;
 	
 	/**
-	 * Constructs a new empty world
-	 */
-	public World(){
-		this.entities = new ArrayList<Entity>();
-		this.field = new Field();
-		this.robot = new Robot();
-	}
-	
-	/**
 	 * Constructs a new world based on the json object
 	 */
-	public World(JSONObject json){
-		this.entities = new ArrayList<Entity>();
+	public SimulationWorld(JSONObject json){
+		this.world = new World(new Vec2(0,0), false);
+		
 		this.field = new Field(json.getJSONObject("field"));
-		this.robot = new Robot();
+		for(CompleteBodyDefinition def : this.field.getCollisionShapes()){
+			this.addBody(def);
+		}
+		this.robot = new Robot(world, json.getJSONObject("robot"));
 	}
 	
 	/**
@@ -64,19 +64,24 @@ public class World extends Observable {
 	}
 
 	/**
-	 * returns a list of all entities in the world, this includes the robot but not the fixed field.
-	 * @return all the entities in the world
+	 * Adds a body to the world based on the body definition
+	 * @param bodyDef the body definition to use
+	 * @param fixtrueDef the feature definition of the body
+	 * @return the body created
 	 */
-	public List<Entity> getEntities() {
-		return this.entities;
+	public Body addBody(BodyDef bodyDef, FixtureDef fixtrueDef) {
+		Body body = this.world.createBody(bodyDef);
+		body.createFixture(fixtrueDef);
+		return body;
 	}
-
+	
 	/**
-	 * Adds an entity to the world
-	 * @param entity the entity to add
+	 * Adds the following body to the world
+	 * @param bodyDef the body definition to use
+	 * @return the body which was created
 	 */
-	public void addEntity(Entity entity) {
-		this.entities.add(entity);
+	public Body addBody(CompleteBodyDefinition bodyDef){
+		return this.addBody(bodyDef.getBodyDef(), bodyDef.getFixtureDef());
 	}
 	
 	/**
@@ -99,6 +104,7 @@ public class World extends Observable {
 	 * Simulates the world
 	 */
 	public void simulate() {
+		world.step(TIME_STEP, 6, 2);
 		this.setChanged();
 		this.notifyObservers();		
 	}
