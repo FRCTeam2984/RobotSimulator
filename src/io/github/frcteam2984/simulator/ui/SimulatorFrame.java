@@ -22,7 +22,7 @@ public class SimulatorFrame extends JFrame {
 		
 		this.setTitle("Team 2984's FRC Simulator");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(1280, 720);
+		this.setSize(1400, 720);
 		
 		this.simulationPane = new SimulationPane();
 		world.addObserver(this.simulationPane);

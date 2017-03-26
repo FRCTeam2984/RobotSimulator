@@ -10,8 +10,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import org.jbox2d.dynamics.World;
-
+import io.github.frcteam2984.simulator.world.Robot;
 import io.github.frcteam2984.simulator.world.SimulationWorld;
 
 /**
@@ -42,7 +41,7 @@ public class SimulationPane extends JPanel implements Observer{
 	 */
 	public SimulationPane(){
 		this.setBackground(new Color(0xFFFFFF));
-		this.scale = 1;
+		this.scale = 2;
 		this.x = 0;
 		this.y = 0;
 	}
@@ -68,9 +67,17 @@ public class SimulationPane extends JPanel implements Observer{
 		double width = this.getWidth();
 		double height = this.getHeight();
 		((Graphics2D)g).translate(width/2, height/2);
+		((Graphics2D)g).scale(this.scale, this.scale);
+
 		for(Shape shape : world.getField().getDrawingPaths()){
 			((Graphics2D)g).draw(shape);
 		}
+		Graphics2D robotGraphics = (Graphics2D)g.create();
+		Robot robot = world.getRobot();
+		robotGraphics.translate(robot.getPos().x, robot.getPos().y);
+		robotGraphics.rotate(robot.getAngle());
+		robotGraphics.draw(robot.getPath());
+		robotGraphics.dispose();
 	}
 
 	/**

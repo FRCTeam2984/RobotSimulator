@@ -111,12 +111,12 @@ public class Field {
 		
 		FixtureDef widthWalls = new FixtureDef();
 		PolygonShape widthWallShape = new PolygonShape();
-		widthWallShape.setAsBox(wallWidth + 2 * wallWidth, (float) this.width);
+		widthWallShape.setAsBox(wallWidth/2, (float) this.width+ 2 * wallWidth);
 		widthWalls.shape = widthWallShape;
 		
 		FixtureDef lengthWalls = new FixtureDef();
 		PolygonShape lengthWallShape = new PolygonShape();
-		lengthWallShape.setAsBox((float) this.length, wallWidth);
+		lengthWallShape.setAsBox((float) this.length, wallWidth/2);
 		lengthWalls.shape = lengthWallShape;
 		
 		BodyDef topWall = new BodyDef();

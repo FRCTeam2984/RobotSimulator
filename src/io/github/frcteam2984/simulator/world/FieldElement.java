@@ -5,7 +5,6 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
 import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
@@ -48,14 +47,7 @@ public class FieldElement {
 		
 		//Drawing
 		JSONArray drawingPoints = json.getJSONArray("drawing");
-		this.drawingPolygon = new Path2D.Double();
-		JSONObject startPoint = drawingPoints.getJSONObject(0);
-		this.drawingPolygon.moveTo(startPoint.getDouble("x"), startPoint.getDouble("y"));
-		for(int i = 1; i<drawingPoints.length(); i++){
-			JSONObject point = drawingPoints.getJSONObject(i);
-			this.drawingPolygon.lineTo(point.getDouble("x"), point.getDouble("y"));
-		}
-		this.drawingPolygon.closePath();
+		this.drawingPolygon = PolygonUtils.getPathFromJson(drawingPoints);
 		AffineTransform transform = new AffineTransform();
 		transform.translate(this.position.getX(), this.position.getY());
 		this.drawingPolygon.transform(transform);

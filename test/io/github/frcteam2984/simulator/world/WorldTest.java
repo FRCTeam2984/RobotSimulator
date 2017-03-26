@@ -16,7 +16,6 @@ public class WorldTest {
 	
 	@Before
 	public void before(){
-		this.world = new SimulationWorld();
 	}
 	
 }
