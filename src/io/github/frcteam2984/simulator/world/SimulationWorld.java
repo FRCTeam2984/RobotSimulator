@@ -105,6 +105,7 @@ public class SimulationWorld extends Observable {
 	 */
 	public void simulate() {
 		world.step(TIME_STEP, 6, 2);
+		this.robot.update(TIME_STEP);
 		this.setChanged();
 		this.notifyObservers();		
 	}

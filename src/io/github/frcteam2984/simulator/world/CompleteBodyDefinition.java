@@ -6,7 +6,7 @@ import org.jbox2d.dynamics.FixtureDef;
 /**
  * A class for easy transportation of a BodyDef and FixtureDef
  * and can be used to create a body with a single fixture.
- * @author Maximilian Apodaca
+ * @author Max Apodaca
  *
  */
 public class CompleteBodyDefinition {

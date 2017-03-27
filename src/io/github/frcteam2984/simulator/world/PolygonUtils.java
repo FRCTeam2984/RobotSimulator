@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 /**
  * A class of useful methods for working with polygons and paths
- * @author Maximilian Apodaca
+ * @author Max Apodaca
  *
  */
 public class PolygonUtils {

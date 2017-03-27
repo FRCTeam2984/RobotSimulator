@@ -46,9 +46,52 @@
 		]
 	},
 	robot:{
-		drawing:[{x:-20, y:-20}, {x:20, y:-20},
-			{x:20, y:20}, {x:-20, y:20}],
-		colliding:[{x:-20, y:-20}, {x:20, y:-20},
-			{x:20, y:20}, {x:-20, y:20}]
+		drawing:[{x:-12, y:-15}, {x:12, y:-15},
+			{x:12, y:15}, {x:-12, y:15}],
+		colliding:[{x:-12, y:-15}, {x:12, y:-15},
+			{x:12, y:15}, {x:-12, y:15}],
+		wheels:[
+		{
+			x: -10,
+			y: 10,
+			width: 2,
+			diameter: 6,
+			torque: 10000,
+			muStatic: 60,
+			muKenetic: 50,
+			drawing:[{x:-1, y:-3}, {x:1, y:-3},
+			{x:1, y:3}, {x:-1, y:3}]
+		}, {
+			x: 10,
+			y: 10,
+			width: 2,
+			diameter: 6,
+			torque: 10000,
+			muStatic: 60,
+			muKenetic: 50,
+			drawing:[{x:-1, y:-3}, {x:1, y:-3},
+			{x:1, y:3}, {x:-1, y:3}]
+		}, {
+			x: 10,
+			y: -10,
+			width: 2,
+			diameter: 6,
+			torque: 10000,
+			muStatic: 60,
+			muKenetic: 50,
+			drawing:[{x:-1, y:-3}, {x:1, y:-3},
+			{x:1, y:3}, {x:-1, y:3}]
+		}, {
+			x: -10,
+			y: -10,
+			width: 2,
+			diameter: 6,
+			torque: 10000,
+			muStatic: 60,
+			muKenetic: 50,
+			drawing:[{x:-1, y:-3}, {x:1, y:-3},
+			{x:1, y:3}, {x:-1, y:3}]
+		}
+		]
 	}
 }

@@ -25,6 +25,7 @@ public class SimulatorFrame extends JFrame {
 		this.setSize(1400, 720);
 		
 		this.simulationPane = new SimulationPane();
+		this.addKeyListener(this.simulationPane);
 		world.addObserver(this.simulationPane);
 		
 		this.add(this.simulationPane);

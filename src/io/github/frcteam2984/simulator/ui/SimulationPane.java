@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -18,7 +20,7 @@ import io.github.frcteam2984.simulator.world.SimulationWorld;
  * @author Max Apodaca
  *
  */
-public class SimulationPane extends JPanel implements Observer{
+public class SimulationPane extends JPanel implements Observer, KeyListener{
 
 	/**
 	 * 
@@ -104,7 +106,55 @@ public class SimulationPane extends JPanel implements Observer{
 	@Override
 	public void update(Observable world, Object message) {
 		this.world = (SimulationWorld) world;
+		float[] powers = new float[]{0, 0, 0, 0};
+		if(pressed[87]){
+			powers[0] += 1;
+			powers[1] += 1;
+			powers[2] += 1;
+			powers[3] += 1;
+		}
+		if(pressed[83]){
+			powers[0] -= 1;
+			powers[1] -= 1;
+			powers[2] -= 1;
+			powers[3] -= 1;
+		}
+		if(pressed[65]){
+			powers[0] -= 1;
+			powers[1] += 1;
+			powers[2] += 1;
+			powers[3] -= 1;
+		}
+		if(pressed[68]){
+			powers[0] += 1;
+			powers[1] -= 1;
+			powers[2] -= 1;
+			powers[3] += 1;
+		}
+		powers[0] = Math.min(Math.max(powers[0], -1), 1);
+		powers[1] = Math.min(Math.max(powers[1], -1), 1);
+		powers[2] = Math.min(Math.max(powers[2], -1), 1);
+		powers[3] = Math.min(Math.max(powers[3], -1), 1);
+
+		this.world.getRobot().setPowers(powers);
 		repaint();
+	}
+
+	private boolean[] pressed = new boolean[128];
+	
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		pressed[arg0.getKeyCode()] = true;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		pressed[arg0.getKeyCode()] = false;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		
 	}
 
 }
