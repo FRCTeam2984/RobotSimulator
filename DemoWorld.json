@@ -59,6 +59,7 @@
 			torque: 10000,
 			muStatic: 60,
 			muKenetic: 50,
+			freeSpinTroque : 40,
 			drawing:[{x:-1, y:-3}, {x:1, y:-3},
 			{x:1, y:3}, {x:-1, y:3}]
 		}, {
@@ -69,6 +70,7 @@
 			torque: 10000,
 			muStatic: 60,
 			muKenetic: 50,
+			freeSpinTroque : 40,
 			drawing:[{x:-1, y:-3}, {x:1, y:-3},
 			{x:1, y:3}, {x:-1, y:3}]
 		}, {
@@ -79,6 +81,7 @@
 			torque: 10000,
 			muStatic: 60,
 			muKenetic: 50,
+			freeSpinTroque : 40,
 			drawing:[{x:-1, y:-3}, {x:1, y:-3},
 			{x:1, y:3}, {x:-1, y:3}]
 		}, {
@@ -89,6 +92,7 @@
 			torque: 10000,
 			muStatic: 60,
 			muKenetic: 50,
+			freeSpinTroque : 40,
 			drawing:[{x:-1, y:-3}, {x:1, y:-3},
 			{x:1, y:3}, {x:-1, y:3}]
 		}
