@@ -7,14 +7,7 @@
 
 package edu.wpi.first.wpilibj.simulation;
 
-import gazebo.msgs.GzFloat64.Float64;
-
-import org.gazebosim.transport.Msgs;
-import org.gazebosim.transport.Publisher;
-
-
 public class SimSpeedController {
-	private Publisher<Float64> pub;
 	private double speed;
 
     /**
@@ -23,7 +16,6 @@ public class SimSpeedController {
      * @param channel The PWM channel on the digital module that the Victor is attached to.
      */
     public SimSpeedController(String topic) {
-    	pub = MainNode.advertise(topic, Msgs.Float64());
     }
 
     /**
@@ -50,7 +42,6 @@ public class SimSpeedController {
      * @param speed The speed value between -1.0 and 1.0 to set.
      */
     public void set(double speed) {
-		pub.publish(Msgs.Float64(speed));
     }
 
     /**

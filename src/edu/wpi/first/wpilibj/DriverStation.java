@@ -186,7 +186,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if the robot is enabled, false otherwise.
      */
     public boolean isEnabled() {
-    	return state != null ? state.getEnabled() : false;
+    	return false; //TODO ADD DS control
     }
 
     /**
@@ -206,7 +206,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if autonomous mode should be enabled, false otherwise.
      */
     public boolean isAutonomous() {
-    	return state != null ? state.getState() == State.AUTO : false;
+    	return false; //TODO ADD DS control
     }
 
     /**
@@ -215,7 +215,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if test mode should be enabled, false otherwise.
      */
     public boolean isTest() {
-    	return state != null ? state.getState() == State.TEST : false;
+    	return false; //TODO ADD DS control
     }
 
     /**
@@ -267,7 +267,7 @@ public class DriverStation implements RobotState.Interface {
      * @return The team number
      */
     public int getTeamNumber() {
-        return 348; // TODO
+        return 2984; // TODO
     }
 
     /**

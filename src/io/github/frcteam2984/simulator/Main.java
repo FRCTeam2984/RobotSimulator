@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import io.github.frcteam2984.simulator.ui.DriveStartionFrame;
 import io.github.frcteam2984.simulator.ui.SimulatorFrame;
 import io.github.frcteam2984.simulator.world.SimulationWorld;
 import io.github.frcteam2984.simulator.world.Tick;
@@ -23,6 +24,7 @@ public class Main {
 		Tick tick = new Tick(world);
 		tick.start();
 		SimulatorFrame frame = new SimulatorFrame(world);
+		DriveStartionFrame ds = new DriveStartionFrame();
 	}
 	
 }

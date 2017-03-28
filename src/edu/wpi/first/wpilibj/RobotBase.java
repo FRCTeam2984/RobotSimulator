@@ -155,7 +155,7 @@ public abstract class RobotBase {
         boolean errorOnExit = false;
 
         try {
-            MainNode.openGazeboConnection();
+//            MainNode.openGazeboConnection();
         } catch (Throwable e) {
             System.err.println("Could not connect to Gazebo.");
             e.printStackTrace();
