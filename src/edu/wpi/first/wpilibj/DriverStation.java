@@ -7,12 +7,12 @@
 
 package edu.wpi.first.wpilibj;
 
-import edu.wpi.first.wpilibj.simulation.MainNode;
+import java.util.Observable;
 
 /**
  * Provide access to the network communication data to / from the Driver Station.
  */
-public class DriverStation implements RobotState.Interface {
+public class DriverStation extends Observable implements RobotState.Interface {
     /**
      * Slot for the analog module to read the battery
      */
@@ -33,6 +33,9 @@ public class DriverStation implements RobotState.Interface {
      * Convert from raw values to volts
      */
     public static final double kDSAnalogInScaling = 5.0 / 1023.0;
+    
+    
+    private Alliance alliance = Alliance.kInvalid;
 
     /**
      * The robot alliance that the robot is a part of
@@ -62,7 +65,7 @@ public class DriverStation implements RobotState.Interface {
 
     private static DriverStation instance = new DriverStation();
     private final Object m_dataSem;
-    private boolean m_userInDisabled = false;
+    private boolean m_userInDisabled = true;
     private boolean m_userInAutonomous = false;
     private boolean m_userInTeleop = false;
     private boolean m_userInTest = false;
@@ -186,7 +189,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if the robot is enabled, false otherwise.
      */
     public boolean isEnabled() {
-    	return false; //TODO ADD DS control
+    	return !this.isDisabled();
     }
 
     /**
@@ -196,7 +199,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if the robot should be disabled, false otherwise.
      */
     public boolean isDisabled() {
-        return !isEnabled();
+        return this.m_userInDisabled;
     }
 
     /**
@@ -206,7 +209,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if autonomous mode should be enabled, false otherwise.
      */
     public boolean isAutonomous() {
-    	return false; //TODO ADD DS control
+    	return this.m_userInAutonomous;
     }
 
     /**
@@ -215,7 +218,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if test mode should be enabled, false otherwise.
      */
     public boolean isTest() {
-    	return false; //TODO ADD DS control
+    	return this.m_userInTest;
     }
 
     /**
@@ -243,14 +246,7 @@ public class DriverStation implements RobotState.Interface {
      * @return the current alliance
      */
     public Alliance getAlliance() {
-        switch ('I') { // TODO: Always invalid
-        case 'R':
-            return Alliance.kRed;
-        case 'B':
-            return Alliance.kBlue;
-        default:
-            return Alliance.kInvalid;
-        }
+        return this.alliance;
     }
 
     /**
@@ -324,5 +320,9 @@ public class DriverStation implements RobotState.Interface {
      * @param entering If true, starting test code; if false, leaving test code */
     public void InTest(boolean entering) {
         m_userInTeleop = entering;
+    }
+    
+    public void setAlliance(Alliance currentAlliance){
+    	this.alliance = currentAlliance;
     }
 }

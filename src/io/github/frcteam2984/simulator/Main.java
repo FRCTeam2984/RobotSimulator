@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import io.github.frcteam2984.codeloader.JarClassLoader;
 import io.github.frcteam2984.simulator.ui.DriveStartionFrame;
 import io.github.frcteam2984.simulator.ui.SimulatorFrame;
 import io.github.frcteam2984.simulator.world.SimulationWorld;
@@ -14,6 +16,8 @@ public class Main {
 
 	public static void main(String[] args){
 		System.out.println("Starting 2D FRC Simulator");
+		WPIManager.setupDummyObjects();
+		JarClassLoader.loadRobotMain(new File("RobotCode.jar"), "org.usfirst.frc.team2984.robot.Robot");
 		String content = "";
 		try{
 			Scanner scanner = new Scanner(new File("DemoWorld.json"));
@@ -24,7 +28,8 @@ public class Main {
 		Tick tick = new Tick(world);
 		tick.start();
 		SimulatorFrame frame = new SimulatorFrame(world);
-		DriveStartionFrame ds = new DriveStartionFrame();
+		DriverStation driverStation = DriverStation.getInstance();
+		DriveStartionFrame ds = new DriveStartionFrame(driverStation);
 	}
 	
 }
