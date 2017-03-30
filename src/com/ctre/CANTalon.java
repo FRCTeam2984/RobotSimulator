@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
+import io.github.frcteam2984.simulator.HardwareAdaptor;
+import io.github.frcteam2984.simulator.MotorControllerDiscriptor;
 
 public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUartClient {
 	private MotorSafetyHelper m_safetyHelper;
@@ -148,7 +150,8 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		}
 	}
 
-
+	private MotorControllerDiscriptor discriptor;
+	
 	private int m_deviceNumber;
 	private boolean m_controlEnabled;
 	private int m_profile;
@@ -162,11 +165,6 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	FeedbackDevice m_feedbackDevice;
 
 	public CANTalon(int deviceNumber) {
-		m_table = null;
-		m_tableListener = null;
-		m_deviceNumber = deviceNumber;
-		m_safetyHelper = new MotorSafetyHelper(this);
-		m_controlEnabled = true;
 		m_profile = 0;
 		m_setPoint = 0.0D;
 		m_codesPerRev = 0;
@@ -174,37 +172,16 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		m_feedbackDevice = FeedbackDevice.QuadEncoder;
 		setProfile(m_profile);
 		applyControlMode(TalonControlMode.PercentVbus);
+		this.discriptor = new MotorControllerDiscriptor(MotorControllerDiscriptor.MotorControllerType.CAN, deviceNumber);
+		HardwareAdaptor.getInstance().addMotorController(this.discriptor);
 	}
 
 	public CANTalon(int deviceNumber, int controlPeriodMs) {
-
-		m_table = null;
-		m_tableListener = null;
-		m_deviceNumber = deviceNumber;
-		m_safetyHelper = new MotorSafetyHelper(this);
-		m_controlEnabled = true;
-		m_profile = 0;
-		m_setPoint = 0.0D;
-		m_codesPerRev = 0;
-		m_numPotTurns = 0;
-		m_feedbackDevice = FeedbackDevice.QuadEncoder;
-		setProfile(m_profile);
-		applyControlMode(TalonControlMode.PercentVbus);
+		this(deviceNumber);
 	}
 
 	public CANTalon(int deviceNumber, int controlPeriodMs, int enablePeriodMs) {
-		m_table = null;
-		m_tableListener = null;
-		m_deviceNumber = deviceNumber;
-		m_safetyHelper = new MotorSafetyHelper(this);
-		m_controlEnabled = true;
-		m_profile = 0;
-		m_setPoint = 0.0D;
-		m_codesPerRev = 0;
-		m_numPotTurns = 0;
-		m_feedbackDevice = FeedbackDevice.QuadEncoder;
-		setProfile(m_profile);
-		applyControlMode(TalonControlMode.PercentVbus);
+		this(deviceNumber);
 	}
 
 	public void pidWrite(double output) {
@@ -232,7 +209,9 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	}
 
 	public void set(double outputValue){
-		//TODO Implement
+		if(this.m_controlMode == TalonControlMode.PercentVbus){
+			this.discriptor.set(Math.max(Math.min(outputValue, 1), -1));
+		}
 	}
 
 	public void setInverted(boolean isInverted) {
@@ -481,6 +460,7 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	public void disableControl() {
 		//TODO Implement Method Stub
 		m_controlEnabled = false;
+		this.discriptor.set(0);
 	}
 
 	public boolean isControlEnabled() {

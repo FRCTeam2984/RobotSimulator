@@ -3,7 +3,7 @@ package io.github.frcteam2984.simulator;
 import java.util.Observable;
 
 /**
- * A description of a sensor: If it is via the roboRIO, CAN, I2C; what type it is, Digital or Analog; and a name for debug purposes
+ * A description of a sensor: If it is via the roboRIO, CAN, I2C; what type it is, Digital or Analog; and a name for debug purposes.
  * @author Max Apodaca
  *
  */
@@ -37,11 +37,36 @@ public class SensorDiscriptor extends Observable{
 	private int id;
 	private String name;
 	
+	private double analogValue;
+	private boolean digitalValue;
+	
 	public SensorDiscriptor(SensorType type, SensorLocation location, int id, String name){
 		this.type = type;
 		this.location = location;
 		this.id = id;
 		this.name = name;
+		this.analogValue = 0;
+		this.digitalValue = false;
+	}
+	
+	public void setValue(double value){
+		this.analogValue = value;
+		this.setChanged();
+		this.notifyObservers(value);
+	}
+	
+	public void setValue(boolean value){
+		this.digitalValue = value;
+		this.setChanged();
+		this.notifyObservers(value);
+	}
+	
+	public boolean getDigitalValue(){
+		return this.digitalValue;
+	}
+	
+	public double getAnalogValue(){
+		return this.analogValue;
 	}
 
 	/**
@@ -70,6 +95,11 @@ public class SensorDiscriptor extends Observable{
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	public String toString(){
+		return "Sensor named : " + name + " of type " + this.type + " has id " + this.id +
+				", location " + this.location + ", and value " + ((this.type == SensorType.Digital) ? this.digitalValue : this.analogValue);
 	}
 	
 }

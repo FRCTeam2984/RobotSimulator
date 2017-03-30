@@ -3,6 +3,8 @@ package io.github.frcteam2984.simulator.world;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -14,12 +16,17 @@ import org.jbox2d.dynamics.World;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.ctre.CANTalon;
+
+import io.github.frcteam2984.simulator.HardwareAdaptor;
+import io.github.frcteam2984.simulator.MotorControllerDiscriptor;
+
 /**
  * A class representative of the robot
  * @author Max Apodaca
  *
  */
-public class Robot{
+public class Robot implements Observer{
 
 	private Body body;
 	
@@ -37,7 +44,8 @@ public class Robot{
 	public Robot(World world, JSONObject obj){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(0, 37);
+		bodyDef.position.set(200, 100);
+		bodyDef.angle = (float) (-Math.PI/2);
 //		bodyDef.linearVelocity.set(200, 0);
 //		bodyDef.angle = (float) (Math.PI/4 + Math.PI);
 //		bodyDef.angularVelocity = 1;
@@ -63,6 +71,8 @@ public class Robot{
 		for(Wheel wheel : this.wheels){
 			this.drawingPath.append(wheel.getPath(), false);
 		}
+		
+		HardwareAdaptor.getInstance().addObserver(this);
 	}
 	
 	
@@ -109,6 +119,19 @@ public class Robot{
 	
 	public void setPowers(float[] powers){
 		this.powers = powers;
+	}
+
+
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if(arg0.getClass().isAssignableFrom(HardwareAdaptor.class) && arg1 != null && arg1.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){
+			MotorControllerDiscriptor controller = (MotorControllerDiscriptor) arg1;
+			controller.addObserver(this);
+		}
+		if(arg0.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){
+			this.powers[((MotorControllerDiscriptor)arg0).getId()-1] = (float) ((MotorControllerDiscriptor)arg0).getPower();
+		}
 	}
 	
 }

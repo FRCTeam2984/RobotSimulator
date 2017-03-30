@@ -12,29 +12,34 @@ public class HardwareAdaptor extends Observable{
 
 	private static HardwareAdaptor instance;
 	
-	private double[] cANMotorOutputs;
+	private MotorControllerDiscriptor[] cANMotorOutputs;
 	
 	private HardwareAdaptor(){
-		this.cANMotorOutputs = new double[256];
+		this.cANMotorOutputs = new MotorControllerDiscriptor[256];
 	}
 	
 	/**
-	 * Sets the power of the given motor controller to the given power
-	 * @param id id of motor controller to change
-	 * @param power the power [-1, 1] which is outputted
+	 * Adds the motor controller description and notifies the observers
+	 * @param controller the new controller dissipation
 	 */
-	public void setCANPower(int id, double power){
-		throwIfNotInRange(id, 0, 255);
-		this.cANMotorOutputs[id] = power;
-		update();
+	public void addMotorController(MotorControllerDiscriptor controller){
+		System.out.println(controller.toString());
+		switch(controller.getType()){
+		case CAN:
+			this.cANMotorOutputs[controller.getId()] = controller;
+			this.setChanged();
+			this.notifyObservers(controller);
+			break;
+		default:
+			System.out.println("Unkown motor controller type" + controller.getType());
+		}
 	}
 	
 	/**
-	 * Returns the current power of the 
-	 * @param id
-	 * @return
+	 * @param id the ID of the controller
+	 * @return the motor controller description of the given id
 	 */
-	public double getCANMotorPower(int id){
+	public MotorControllerDiscriptor getCANController(int id){
 		throwIfNotInRange(id, 0, 255);
 		return this.cANMotorOutputs[id];
 	}
@@ -43,11 +48,6 @@ public class HardwareAdaptor extends Observable{
 		if(number < low || number > high){
 			throw new IllegalArgumentException(number + " is not in the range ["  + low + "," + high + "]");
 		}
-	}
-	
-	private void update(){
-		this.setChanged();
-		this.notifyObservers();
 	}
 	
 	/**
