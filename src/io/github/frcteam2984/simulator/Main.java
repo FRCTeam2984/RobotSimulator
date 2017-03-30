@@ -15,8 +15,6 @@ import io.github.frcteam2984.simulator.world.Tick;
 
 public class Main {
 
-	public static IterativeRobot robot;
-	
 	public static void main(String[] args){
 		System.out.println("Starting 2D FRC Simulator");
 		WPIManager.setupDummyObjects();
@@ -32,10 +30,12 @@ public class Main {
 		SimulatorFrame frame = new SimulatorFrame(world);
 		DriverStation driverStation = DriverStation.getInstance();
 		DriveStartionFrame ds = new DriveStartionFrame(driverStation);
-		IterativeRobot robot = JarClassLoader.loadRobotMain(new File("RobotCode.jar"), "org.usfirst.frc.team2984.robot.Robot");
-		robot.robotInit();
-		robot.teleopInit();
-		Main.robot = robot;
+		Class<? extends IterativeRobot> robot = JarClassLoader.loadRobotMain(new File("RobotCode.jar"), "org.usfirst.frc.team2984.robot.Robot");
+		try {
+			RobotTimer timer = new RobotTimer(robot.newInstance(), DriverStation.getInstance());
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -9,6 +9,8 @@ package edu.wpi.first.wpilibj;
 
 import java.util.Observable;
 
+import com.ctre.CANTalon;
+
 /**
  * Provide access to the network communication data to / from the Driver Station.
  */
@@ -298,6 +300,14 @@ public class DriverStation extends Observable implements RobotState.Interface {
      *   for diagnostic purposes only
      * @param entering If true, starting disabled code; if false, leaving disabled code */
     public void InDisabled(boolean entering) {
+    	if(this.m_userInDisabled != entering){
+    		this.setChanged();
+    		if(entering){
+        		CANTalon.disableTalons();
+        	} else {
+        		CANTalon.enableTalons();
+        	}
+    	}
         m_userInDisabled=entering;
     }
 
@@ -305,6 +315,9 @@ public class DriverStation extends Observable implements RobotState.Interface {
     *   for diagnostic purposes only
      * @param entering If true, starting autonomous code; if false, leaving autonomous code */
     public void InAutonomous(boolean entering) {
+    	if(this.m_userInAutonomous != entering){
+    		this.setChanged();
+    	}
         m_userInAutonomous=entering;
     }
 
@@ -312,6 +325,9 @@ public class DriverStation extends Observable implements RobotState.Interface {
     *   for diagnostic purposes only
      * @param entering If true, starting teleop code; if false, leaving teleop code */
     public void InOperatorControl(boolean entering) {
+    	if(this.m_userInTeleop != entering){
+    		this.setChanged();
+    	}
         m_userInTeleop=entering;
     }
 
@@ -319,10 +335,17 @@ public class DriverStation extends Observable implements RobotState.Interface {
      *   for diagnostic purposes only
      * @param entering If true, starting test code; if false, leaving test code */
     public void InTest(boolean entering) {
-        m_userInTeleop = entering;
+    	if(this.m_userInTest != entering){
+    		this.setChanged();
+    	}
+    	m_userInTest = entering;
     }
     
     public void setAlliance(Alliance currentAlliance){
     	this.alliance = currentAlliance;
+    }
+    
+    public void update(){
+    	this.notifyObservers();
     }
 }

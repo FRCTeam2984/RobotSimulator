@@ -122,7 +122,6 @@ public class Robot implements Observer{
 	}
 
 
-
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg0.getClass().isAssignableFrom(HardwareAdaptor.class) && arg1 != null && arg1.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){

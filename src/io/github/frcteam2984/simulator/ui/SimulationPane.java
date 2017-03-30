@@ -107,8 +107,6 @@ public class SimulationPane extends JPanel implements Observer, KeyListener{
 	@Override
 	public void update(Observable world, Object message) {
 		this.world = (SimulationWorld) world;
-		if(Main.robot != null)
-		Main.robot.teleopPeriodic();
 		repaint();
 	}
 

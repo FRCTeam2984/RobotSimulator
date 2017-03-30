@@ -98,7 +98,7 @@ public class DriveStartionFrame extends JFrame implements Observer, ActionListen
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(this.enabled.isSelected()){
+		if(!this.enabled.isSelected()){
 			this.driverStartion.InAutonomous(false);
 			this.driverStartion.InOperatorControl(false);
 			this.driverStartion.InTest(false);
@@ -109,6 +109,7 @@ public class DriveStartionFrame extends JFrame implements Observer, ActionListen
 			this.driverStartion.InTest(this.testButton.isSelected());
 			this.driverStartion.InDisabled(false);
 		}
+		this.driverStartion.update();
 	}
 	
 }

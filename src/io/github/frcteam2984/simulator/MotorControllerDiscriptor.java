@@ -22,11 +22,23 @@ public class MotorControllerDiscriptor extends Observable implements Observer{
 		PWM
 	}
 	
+	/**
+	 * The types of updates send by the motor controller
+	 * @author Max Apodaca
+	 *
+	 */
+	public static enum MotorControllerEvent {
+		POWER,
+		BREAK_COAST_MODE,
+		DISABLE_ENABLE
+	}
+	
 	private MotorControllerType type;
 	private int id;
 	private List<SensorDiscriptor> sensors;
 	private double power;
 	private boolean coast;
+	private boolean disabled;
 	
 	/**
 	 * Crates a new motor controller descriptor
@@ -39,6 +51,7 @@ public class MotorControllerDiscriptor extends Observable implements Observer{
 		this.sensors = new ArrayList<SensorDiscriptor>();
 		this.power = 0;
 		this.coast = false;
+		this.disabled = true;
 	}
 	
 	/**
@@ -59,7 +72,7 @@ public class MotorControllerDiscriptor extends Observable implements Observer{
 	public void set(double power){
 		this.power = power;
 		this.setChanged();
-		this.notifyObservers(power);
+		this.notifyObservers(MotorControllerEvent.POWER);
 	}
 	
 	/**
@@ -69,7 +82,19 @@ public class MotorControllerDiscriptor extends Observable implements Observer{
 	public void setBreakCoastMode(boolean coast){
 		this.coast = coast;
 		this.setChanged();
-		this.notifyObservers(coast);
+		this.notifyObservers(MotorControllerEvent.BREAK_COAST_MODE);
+	}
+	
+	/**
+	 * Sets the motor controller into a disabled mode, or enables it
+	 * @param disabled whether it is disabled
+	 */
+	public void setDisabled(boolean disabled){
+		if(this.disabled != disabled){
+			this.setChanged();
+			this.disabled = disabled;
+			this.notifyObservers(MotorControllerEvent.DISABLE_ENABLE);
+		}
 	}
 
 	/**

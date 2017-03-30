@@ -1,5 +1,10 @@
 package com.ctre;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -10,13 +15,27 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
 import io.github.frcteam2984.simulator.HardwareAdaptor;
 import io.github.frcteam2984.simulator.MotorControllerDiscriptor;
 
-public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUartClient {
+public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUartClient, Observer {
 	private MotorSafetyHelper m_safetyHelper;
 	private boolean m_isInverted = false;
 	protected PIDSourceType m_pidSource = PIDSourceType.kDisplacement;
 
 	private TalonControlMode m_controlMode;
+	
+	private static List<CANTalon> controllers = new ArrayList<CANTalon>();
 
+	public static void disableTalons(){
+		for(CANTalon talon : controllers){
+			talon.disable();
+		}
+	}
+	
+	public static void enableTalons(){
+		for(CANTalon talon : controllers){
+			talon.enable();
+		}
+	}
+	
 	public static enum TalonControlMode {
 		PercentVbus(0), Position(1), Speed(2), Current(3), Voltage(4), Follower(5), MotionProfile(6), MotionMagic(
 				7), Disabled(15);
@@ -174,6 +193,8 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		applyControlMode(TalonControlMode.PercentVbus);
 		this.discriptor = new MotorControllerDiscriptor(MotorControllerDiscriptor.MotorControllerType.CAN, deviceNumber);
 		HardwareAdaptor.getInstance().addMotorController(this.discriptor);
+		this.discriptor.addObserver(this);
+		controllers.add(this);
 	}
 
 	public CANTalon(int deviceNumber, int controlPeriodMs) {
@@ -461,6 +482,7 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		//TODO Implement Method Stub
 		m_controlEnabled = false;
 		this.discriptor.set(0);
+		this.discriptor.setDisabled(true);
 	}
 
 	public boolean isControlEnabled() {
@@ -952,5 +974,10 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		set(0.0D);
 
 		m_table.removeTableListener(m_tableListener);
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		
 	}
 }
