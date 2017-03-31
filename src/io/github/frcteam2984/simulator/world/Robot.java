@@ -16,10 +16,9 @@ import org.jbox2d.dynamics.World;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.ctre.CANTalon;
-
 import io.github.frcteam2984.simulator.HardwareAdaptor;
 import io.github.frcteam2984.simulator.MotorControllerDiscriptor;
+import io.github.frcteam2984.simulator.SensorDiscriptor;
 
 /**
  * A class representative of the robot
@@ -35,6 +34,9 @@ public class Robot implements Observer{
 	private List<Wheel> wheels;
 	
 	private float[] powers = new float[4];
+	
+	private SensorDiscriptor gyroPos;
+	private SensorDiscriptor gyroVel;
 	
 	/**
 	 * Creates a robot in the given world based on the JSON parameters
@@ -78,10 +80,16 @@ public class Robot implements Observer{
 	
 	
 	/**
-	 * causes the wheels and friction to be applied
+	 * causes the wheels and friction to be applied and the sensor to be updated
 	 * @param timeStep the timestep over which to apply the function
 	 */
 	public void update(float timeStep){
+		if(this.gyroPos != null){
+			this.gyroPos.setValue(Math.toDegrees(this.body.getAngle()));
+		}
+		if(this.gyroVel != null){
+			this.gyroVel.setValue(Math.toDegrees(this.body.getAngularVelocity()));
+		}
 		int i = 0;
 		for(Wheel wheel : this.wheels){
 			wheel.update(powers[i], timeStep);
@@ -130,6 +138,15 @@ public class Robot implements Observer{
 		}
 		if(arg0.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){
 			this.powers[((MotorControllerDiscriptor)arg0).getId()-1] = (float) ((MotorControllerDiscriptor)arg0).getPower();
+		}
+		if(arg0.getClass().isAssignableFrom(HardwareAdaptor.class) && arg1 != null && arg1.getClass().isAssignableFrom(SensorDiscriptor.class)){
+			if(((SensorDiscriptor)arg1).getLocation() == SensorDiscriptor.SensorLocation.SPI &&
+					((SensorDiscriptor)arg1).getId() == 0){
+				this.gyroPos = (SensorDiscriptor) arg1;
+			} else if(((SensorDiscriptor)arg1).getLocation() == SensorDiscriptor.SensorLocation.SPI &&
+					((SensorDiscriptor)arg1).getId() == 1){
+				this.gyroVel = (SensorDiscriptor) arg1;
+			}
 		}
 	}
 	

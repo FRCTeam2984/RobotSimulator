@@ -1,5 +1,8 @@
 package io.github.frcteam2984.simulator;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -13,9 +16,14 @@ public class HardwareAdaptor extends Observable{
 	private static HardwareAdaptor instance;
 	
 	private MotorControllerDiscriptor[] cANMotorOutputs;
+	private Map<SensorDiscriptor.SensorLocation, SensorDiscriptor[]> sensors;
 	
 	private HardwareAdaptor(){
 		this.cANMotorOutputs = new MotorControllerDiscriptor[256];
+		this.sensors = new EnumMap<SensorDiscriptor.SensorLocation, SensorDiscriptor[]>(SensorDiscriptor.SensorLocation.class);
+		for(SensorDiscriptor.SensorLocation location : SensorDiscriptor.SensorLocation.values()){
+			this.sensors.put(location, new SensorDiscriptor[256]);
+		}
 	}
 	
 	/**
@@ -23,7 +31,6 @@ public class HardwareAdaptor extends Observable{
 	 * @param controller the new controller dissipation
 	 */
 	public void addMotorController(MotorControllerDiscriptor controller){
-		System.out.println(controller.toString());
 		switch(controller.getType()){
 		case CAN:
 			this.cANMotorOutputs[controller.getId()] = controller;
@@ -33,6 +40,29 @@ public class HardwareAdaptor extends Observable{
 		default:
 			System.out.println("Unkown motor controller type" + controller.getType());
 		}
+	}
+	
+	/**
+	 * Adds the following sensor descriptor to the hardware adaptor allowing it to be accessed
+	 * @param sensor the sensor to add
+	 */
+	public void addSensor(SensorDiscriptor sensor){
+		throwIfNotInRange(sensor.getId(), 0, 255);
+		SensorDiscriptor[] sensorLocations = this.sensors.get(sensor.getLocation());
+		sensorLocations[sensor.getId()] = sensor;
+		this.setChanged();
+		this.notifyObservers(sensor);
+	}
+	
+	/**
+	 * Returns the sensor at the following location with the following ID
+	 * @param location the location of the sensor
+	 * @param id the id of the sensor
+	 * @return the sensor
+	 */
+	public SensorDiscriptor getSensor(SensorDiscriptor.SensorLocation location, int id){
+		throwIfNotInRange(id, 0, 255);
+		return this.sensors.get(location)[id];
 	}
 	
 	/**

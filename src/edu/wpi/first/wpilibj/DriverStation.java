@@ -91,6 +91,7 @@ public class DriverStation extends Observable implements RobotState.Interface {
      */
     protected DriverStation() {
         m_dataSem = new Object();
+        RobotState.SetImplementation(this);
 
 //        MainNode.subscribe("ds/state", GzDriverStation.DriverStation.getDefaultInstance(),
 //    		new SubscriberCallback<GzDriverStation.DriverStation>() {
@@ -346,6 +347,7 @@ public class DriverStation extends Observable implements RobotState.Interface {
     }
     
     public void update(){
+    	this.setChanged();
     	this.notifyObservers();
     }
 }

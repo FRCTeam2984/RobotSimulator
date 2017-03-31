@@ -1,25 +1,14 @@
 package edu.wpi.first.wpilibj;
 
-public class ADXRS450_Gyro extends GyroBase{
+/**
+ * A wrapper class to add the ADXRS450 gyro (FRC Gyro) support
+ * @author Max Apodaca
+ *
+ */
+public class ADXRS450_Gyro extends AnalogGyro{
 
-	@Override
-	public void calibrate() {
-		
-	}
-
-	@Override
-	public void reset() {
-		
-	}
-
-	@Override
-	public double getAngle() {
-		return 0;
-	}
-
-	@Override
-	public double getRate() {
-		return 0;
+	public ADXRS450_Gyro() {
+		super(0);
 	}
 
 }

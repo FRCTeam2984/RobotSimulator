@@ -115,9 +115,7 @@ public class Wheel {
     	float sidewaysVel = (float) -(vel.x * Math.cos(angle) - vel.y * Math.sin(angle));
     	float forwardVel = (float) -(vel.x * Math.sin(angle) + vel.y * Math.cos(angle));
     	Vec2 fT = new Vec2(0, power * this.maxTorque / this.diameter * 2);
-    	if(power == 0){
-        	fT = new Vec2(0, Math.copySign(Math.min(Math.abs(forwardVel)/100, 1), -forwardVel) * this.maxTorque / this.diameter * 2);
-    	}
+        fT = fT.add(new Vec2(0, Math.copySign(Math.min(Math.abs(forwardVel)/100, 1), -forwardVel) * this.maxTorque / this.diameter * 2));
     	Vec2 fVel = new Vec2(mass / 4 * sidewaysVel / timeStep, 0);
     	Vec2 fTotal = fT.add(fVel);
     	if(fTotal.length() > mass / 4 * Constants.g * this.muStatic){

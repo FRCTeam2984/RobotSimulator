@@ -1,5 +1,6 @@
 package io.github.frcteam2984.simulator.world;
 
+import java.util.List;
 import java.util.Observable;
 
 import org.jbox2d.common.Vec2;
@@ -9,13 +10,16 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.json.JSONObject;
 
+import io.github.frcteam2984.simulator.vision.Target;
+import io.github.frcteam2984.simulator.vision.VisionWorld;
+
 /**
  * The simulation world which contains the robot, the field, and all entities.
  * Entities are considered field interactive objects such as gears and fuel.
  * @author Max Apodaca
  *
  */
-public class SimulationWorld extends Observable {
+public class SimulationWorld extends Observable implements VisionWorld {
 
 	private static final float TIME_STEP = 1/60f;
 	
@@ -108,6 +112,11 @@ public class SimulationWorld extends Observable {
 		this.robot.update(TIME_STEP);
 		this.setChanged();
 		this.notifyObservers();		
+	}
+
+	@Override
+	public List<Target> getTargets() {
+		return null;
 	}
 	
 }
