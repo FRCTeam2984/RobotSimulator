@@ -99,9 +99,10 @@ public class SmartDashboard {
    * @param key the key
    * @param value the value
    * @throws IllegalArgumentException if key is null
+   * @return true because if it is not there the method will not be loaded correctly for Java is expecting a boolean
    */
-  public static void putBoolean(String key, boolean value) {
-    table.putBoolean(key, value);
+  public static boolean putBoolean(String key, boolean value) {
+    return table.putBoolean(key, value);
   }
 
   /**
@@ -141,8 +142,8 @@ public class SmartDashboard {
    * @param value the value
    * @throws IllegalArgumentException if key is null
    */
-  public static void putNumber(String key, double value) {
-    table.putNumber(key, value);
+  public static boolean putNumber(String key, double value) {
+    return table.putNumber(key, value);
   }
 
   /**
@@ -184,8 +185,8 @@ public class SmartDashboard {
    * @param value the value
    * @throws IllegalArgumentException if key or value is null
    */
-  public static void putString(String key, String value) {
-    table.putString(key, value);
+  public static boolean putString(String key, String value) {
+    return table.putString(key, value);
   }
 
   /**

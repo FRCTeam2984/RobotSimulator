@@ -45,20 +45,34 @@
 			}
 		]
 	}, "robot":{
+		"x":310.5,
+		"y":70.035,
+		"controllerType": "CAN",
 		"drawing":[{"x":-12, "y":-15}, {"x":12, "y":-15},
 			{"x":12, "y":15}, {"x":-12, "y":15}],
 		"colliding":[{"x":-12, "y":-15}, {"x":12, "y":-15},
 			{"x":12, "y":15}, {"x":-12, "y":15}],
+		"arms":[],
 		"wheels":[
 		{
 			"x": -10,
 			"y": 10,
 			"width": 2,
 			"diameter": 6,
-			"torque": 10000,
+			"torque": {
+				"slope": -0.08083804,
+				"intercept": 429.25
+			}, 
+			"transmissionRatio": 0.2,
 			"muStatic": 60,
 			"muKenetic": 50,
-			"freeSpinTroque" : 40,
+			"freeSpinTroque" : 500,
+			"controllerID": 14,
+			"sensor": {
+				"type": "Digital",
+				"location": "CAN",
+				"ticksPerRev": 29000
+			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
 		}, {
@@ -66,10 +80,20 @@
 			"y": 10,
 			"width": 2,
 			"diameter": 6,
-			"torque": 10000,
+			"torque": {
+				"slope": -0.08083804,
+				"intercept": 429.25
+			}, 
+			"transmissionRatio": 0.2,
 			"muStatic": 60,
 			"muKenetic": 50,
-			"freeSpinTroque" : 40,
+			"freeSpinTroque" : 500,
+			"controllerID": 4,
+			"sensor": {
+				"type": "Digital",
+				"location": "CAN",
+				"ticksPerRev": -29000
+			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
 		}, {
@@ -77,10 +101,20 @@
 			"y": -10,
 			"width": 2,
 			"diameter": 6,
-			"torque": 10000,
+			"torque": {
+				"slope": -0.08083804,
+				"intercept": 429.25
+			}, 
+			"transmissionRatio": 0.2,
 			"muStatic": 60,
 			"muKenetic": 50,
-			"freeSpinTroque" : 40,
+			"freeSpinTroque" : 500,
+			"controllerID": 16,
+			"sensor": {
+				"type": "Digital",
+				"location": "CAN",
+				"ticksPerRev": 29000
+			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
 		}, {
@@ -88,10 +122,20 @@
 			"y": -10,
 			"width": 2,
 			"diameter": 6,
-			"torque": 10000,
+			"torque": {
+				"slope": -0.08083804,
+				"intercept": 429.25
+			}, 
+			"transmissionRatio": 0.2,
 			"muStatic": 60,
 			"muKenetic": 50,
-			"freeSpinTroque" : 40,
+			"freeSpinTroque" : 500,
+			"controllerID": 1,
+			"sensor": {
+				"type": "Digital",
+				"location": "CAN",
+				"ticksPerRev": -29000
+			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
 		}

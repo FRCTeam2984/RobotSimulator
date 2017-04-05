@@ -245,7 +245,7 @@ public abstract class Command implements NamedSendable {
    * The initialize method is called the first time this Command is run after
    * being started.
    */
-  protected abstract void initialize();
+  protected void initialize(){};
 
   /** A shadow method called before {@link Command#initialize() initialize()} */
   void _initialize() {}
@@ -254,7 +254,7 @@ public abstract class Command implements NamedSendable {
    * The execute method is called repeatedly until this Command either finishes
    * or is canceled.
    */
-  protected abstract void execute();
+  protected void execute(){};
 
   /** A shadow method called before {@link Command#execute() execute()} */
   void _execute() {}
@@ -278,7 +278,7 @@ public abstract class Command implements NamedSendable {
    * wrap up loose ends, like shutting off a motor that was being used in the
    * command.
    */
-  protected abstract void end();
+  protected void end(){};
 
   /** A shadow method called after {@link Command#end() end()}. */
   void _end() {}
@@ -298,7 +298,7 @@ public abstract class Command implements NamedSendable {
    * method within this method
    * </p>
    */
-  protected abstract void interrupted();
+  protected void interrupted(){};
 
   /** A shadow method called after {@link Command#interrupted() interrupted()}. */
   void _interrupted() {}

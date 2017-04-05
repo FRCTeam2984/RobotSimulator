@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 import io.github.frcteam2984.simulator.HardwareAdaptor;
 import io.github.frcteam2984.simulator.MotorControllerDiscriptor;
+import io.github.frcteam2984.simulator.SensorDiscriptor;
+import io.github.frcteam2984.simulator.world.Tick;
 
 public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUartClient, Observer {
 	private MotorSafetyHelper m_safetyHelper;
@@ -170,10 +172,24 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	}
 
 	private MotorControllerDiscriptor discriptor;
+	private SensorDiscriptor encoder;
+	
+	
+	private double lastEncPos;
+	private double encoderDelta;
+	
+	private boolean sensorReversed;
 	
 	private int m_deviceNumber;
 	private boolean m_controlEnabled;
 	private int m_profile;
+	
+	private double p;
+	private double i;
+	private double d;
+	private double f;
+	
+	private double lastPIDOutput;
 
 	double m_setPoint;
 
@@ -195,6 +211,7 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 		HardwareAdaptor.getInstance().addMotorController(this.discriptor);
 		this.discriptor.addObserver(this);
 		controllers.add(this);
+		this.lastPIDOutput = 0;
 	}
 
 	public CANTalon(int deviceNumber, int controlPeriodMs) {
@@ -232,6 +249,17 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	public void set(double outputValue){
 		if(this.m_controlMode == TalonControlMode.PercentVbus){
 			this.discriptor.set(Math.max(Math.min(outputValue, 1), -1));
+		} else if(this.m_controlMode == TalonControlMode.Speed){
+			if(this.encoder == null){
+				this.discriptor.set(0);
+				System.err.println("No Encoder Discriptor even passed to " + this.discriptor);
+				return;
+			}
+			double error = outputValue + ((this.sensorReversed) ? this.getEncVelocity() : -this.getEncVelocity());
+			error *= this.p;
+			this.lastPIDOutput += error;
+			this.lastPIDOutput = Math.max(Math.min(lastPIDOutput, 1), -1);
+			this.discriptor.set(this.lastPIDOutput);
 		}
 	}
 
@@ -261,7 +289,7 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	}
 
 	public void reverseSensor(boolean flip) {
-//TODO Implement Method
+		this.sensorReversed = flip;
 }
 
 	public void reverseOutput(boolean flip) {
@@ -275,15 +303,21 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
     
 	public int getEncPosition() {
 		//TODO Implement Method
+		if(this.encoder != null){
+			return (int) Math.round(this.encoder.getAnalogValue());
+		}
 		return 0;
 	}
 
 	public void setEncPosition(int newPosition) {
-//TODO Implement Method
+		if(this.encoder != null)
+			this.encoder.setValue(newPosition);
 }
 
 	public int getEncVelocity() {
-//TODO Implement Method
+		if(this.encoder != null){
+			return (int) Math.round((this.encoderDelta) / Tick.DEFAULT_DELAY);
+		}
 		return -1;
 }
 
@@ -394,7 +428,7 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 }
 
 	public void configEncoderCodesPerRev(int codesPerRev) {
-//TODO Implement Method
+		this.m_codesPerRev = codesPerRev;
 }
 
 	public void configPotentiometerTurns(int turns) {
@@ -422,7 +456,6 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 }
 
 	public double getPosition() {
-//TODO Implement Method
 		return -1;
 }
 
@@ -530,19 +563,19 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 }
 
 	public void setP(double p) {
-//TODO Implement Method
+		this.p = p;
 }
 
 	public void setI(double i) {
-//TODO Implement Method
+		this.i = i;
 }
 
 	public void setD(double d) {
-//TODO Implement Method
+		this.d = d;
 }
 
 	public void setF(double f) {
-//TODO Implement Method
+		this.f = f;
 }
 
 	public void setIZone(int izone) {
@@ -978,6 +1011,17 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+		if(arg0 == this.discriptor && arg1.getClass().isAssignableFrom(SensorDiscriptor.class)){
+			SensorDiscriptor encoder = (SensorDiscriptor) arg1;
+			if(encoder.getLocation() != SensorDiscriptor.SensorLocation.CAN || encoder.getType() != SensorDiscriptor.SensorType.Digital){
+				return;
+			}
+			this.encoder = encoder;
+			this.encoder.addObserver(this);
+		}
+		if(arg0 == this.encoder){
+			this.encoderDelta = this.encoder.getAnalogValue() - this.lastEncPos;
+			this.lastEncPos = this.encoder.getAnalogValue();
+		}
 	}
 }

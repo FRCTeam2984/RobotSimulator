@@ -2,7 +2,9 @@ package io.github.frcteam2984.simulator.world;
 
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -31,9 +33,11 @@ public class Robot implements Observer{
 	
 	private Path2D drawingPath;
 	
-	private List<Wheel> wheels;
+	private MotorControllerDiscriptor.MotorControllerType controllerType;
 	
-	private float[] powers = new float[4];
+	private Map<Integer, Wheel> wheels;
+	private Map<Integer, Arm> arms;
+	private List<MotorControllerDiscriptor> controllers;
 	
 	private SensorDiscriptor gyroPos;
 	private SensorDiscriptor gyroVel;
@@ -46,7 +50,7 @@ public class Robot implements Observer{
 	public Robot(World world, JSONObject obj){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.position.set(200, 100);
+		bodyDef.position.set((float)obj.getDouble("x"), (float)obj.getDouble("y"));
 		bodyDef.angle = (float) (-Math.PI/2);
 //		bodyDef.linearVelocity.set(200, 0);
 //		bodyDef.angle = (float) (Math.PI/4 + Math.PI);
@@ -55,22 +59,36 @@ public class Robot implements Observer{
 		PolygonShape shape = PolygonUtils.getPolygonFromJson(obj.getJSONArray("colliding"));
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.density = 0.01f;
+		fixtureDef.density = 0.001f;
 		fixtureDef.friction = 0.3f;
 		
 		this.body = world.createBody(bodyDef);
 		this.body.createFixture(fixtureDef);
 		
+		this.controllers = new ArrayList<MotorControllerDiscriptor>();
+		
+		String controllerType = obj.getString("controllerType");
+		this.controllerType = MotorControllerDiscriptor.MotorControllerType.valueOf(controllerType);
+		
 		JSONArray wheels = obj.getJSONArray("wheels");
-		this.wheels = new ArrayList<Wheel>();
+		this.wheels = new HashMap<Integer, Wheel>();
 		
 		for(int i = 0; i<wheels.length(); i++){
-			this.wheels.add(new Wheel(wheels.getJSONObject(i), this, world));
+			Wheel wheel = new Wheel(wheels.getJSONObject(i), this, world);
+			this.wheels.put(wheels.getJSONObject(i).getInt("controllerID"), wheel);
+		}
+		
+		JSONArray arms = obj.getJSONArray("arms");
+		this.arms = new HashMap<Integer, Arm>();
+		
+		for(int i = 0; i<arms.length(); i++){
+			Arm arm = new Arm(arms.getJSONObject(i));
+			this.arms.put(wheels.getJSONObject(i).getInt("controllerID"), arm);
 		}
 		
 		this.drawingPath = PolygonUtils.getPathFromJson(obj.getJSONArray("drawing"));
 		
-		for(Wheel wheel : this.wheels){
+		for(Wheel wheel : this.wheels.values()){
 			this.drawingPath.append(wheel.getPath(), false);
 		}
 		
@@ -90,10 +108,8 @@ public class Robot implements Observer{
 		if(this.gyroVel != null){
 			this.gyroVel.setValue(Math.toDegrees(this.body.getAngularVelocity()));
 		}
-		int i = 0;
-		for(Wheel wheel : this.wheels){
-			wheel.update(powers[i], timeStep);
-			i++;
+		for(MotorControllerDiscriptor controller : this.controllers){
+			this.wheels.get(controller.getId()).update((float) controller.getPower(), timeStep);
 		}
 	}
 	
@@ -125,19 +141,18 @@ public class Robot implements Observer{
 		return this.body;
 	}
 	
-	public void setPowers(float[] powers){
-		this.powers = powers;
-	}
-
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg0.getClass().isAssignableFrom(HardwareAdaptor.class) && arg1 != null && arg1.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){
 			MotorControllerDiscriptor controller = (MotorControllerDiscriptor) arg1;
-			controller.addObserver(this);
-		}
-		if(arg0.getClass().isAssignableFrom(MotorControllerDiscriptor.class)){
-			this.powers[((MotorControllerDiscriptor)arg0).getId()-1] = (float) ((MotorControllerDiscriptor)arg0).getPower();
+			if(controller.getType().equals(this.controllerType) && this.wheels.keySet().contains(controller.getId())){
+				this.controllers.add(controller);
+				SensorDiscriptor sensor = this.wheels.get(controller.getId()).getSensor();
+				if(sensor != null){
+					controller.addSensor(sensor);
+				}
+			}
 		}
 		if(arg0.getClass().isAssignableFrom(HardwareAdaptor.class) && arg1 != null && arg1.getClass().isAssignableFrom(SensorDiscriptor.class)){
 			if(((SensorDiscriptor)arg1).getLocation() == SensorDiscriptor.SensorLocation.SPI &&

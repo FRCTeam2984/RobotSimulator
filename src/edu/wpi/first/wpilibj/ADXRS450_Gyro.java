@@ -9,6 +9,7 @@ public class ADXRS450_Gyro extends AnalogGyro{
 
 	public ADXRS450_Gyro() {
 		super(0);
+		this.reset();
 	}
 
 }

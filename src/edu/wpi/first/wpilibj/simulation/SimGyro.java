@@ -20,6 +20,8 @@ import io.github.frcteam2984.simulator.SensorDiscriptor;
 public class SimGyro implements Observer{
 	private double position, velocity;
 	
+	private boolean firstPos;
+	
 	private SensorDiscriptor positionDiscriptor;
 	private SensorDiscriptor velocityDiscriptor;
 	
@@ -39,6 +41,8 @@ public class SimGyro implements Observer{
 		HardwareAdaptor.getInstance().addSensor(this.velocityDiscriptor);
 		this.positionDiscriptor.addObserver(this);
 		this.velocityDiscriptor.addObserver(this);
+		
+		this.firstPos = true;
 	}
 	
 	/**
@@ -67,6 +71,10 @@ public class SimGyro implements Observer{
 		if(o == this.positionDiscriptor){
 			SensorDiscriptor position = (SensorDiscriptor) o;
 			this.position = position.getAnalogValue();
+			if(this.firstPos){
+				this.firstPos = false;
+				this.reset();
+			}
 		}
 		if(o == this.velocityDiscriptor){
 			SensorDiscriptor velocity = (SensorDiscriptor) o;

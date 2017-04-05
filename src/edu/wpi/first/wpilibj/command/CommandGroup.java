@@ -277,6 +277,7 @@ public class CommandGroup extends Command {
           if (firstRun) {
             cmd.startRunning();
             cancelConflicts(cmd);
+            System.out.println(cmd);
           }
           firstRun = false;
           break;

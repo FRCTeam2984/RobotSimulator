@@ -62,6 +62,7 @@ public class Main {
 		
 		
 		try {
+			@SuppressWarnings("unused")
 			RobotTimer timer = new RobotTimer(robot.newInstance(), DriverStation.getInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();

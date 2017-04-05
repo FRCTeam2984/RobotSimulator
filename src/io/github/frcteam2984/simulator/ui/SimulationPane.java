@@ -7,12 +7,16 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import io.github.frcteam2984.simulator.Main;
 import io.github.frcteam2984.simulator.world.Robot;
 import io.github.frcteam2984.simulator.world.SimulationWorld;
 
@@ -101,12 +105,34 @@ public class SimulationPane extends JPanel implements Observer, KeyListener{
 		this.y = y;
 	}
 
+//	static int i = 0;
+	
 	/**
 	 * Called when the world is updated and repaints the screen
 	 */
 	@Override
 	public void update(Observable world, Object message) {
 		this.world = (SimulationWorld) world;
+//		if(this.getWidth() > 0 && this.getHeight() > 0){
+//			BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+//			this.paint(image.getGraphics());
+//			new Thread(){
+//				@Override
+//				public void run(){
+//					NumberFormat format = NumberFormat.getIntegerInstance();
+//					format.setGroupingUsed(false);
+//					format.setMaximumIntegerDigits(5);
+//					format.setMinimumIntegerDigits(5);
+//					File output = new File("/tmp/FRCSim/frame_" + format.format(i++) + ".png");
+//					try {
+//						ImageIO.write(image, "png", output);
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}.start();
+//			
+//		}
 		repaint();
 	}
 
