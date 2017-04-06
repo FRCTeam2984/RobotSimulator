@@ -27,7 +27,9 @@ public class MotorPreformanceCurve {
 	 * @return the torque which it produces
 	 */
 	public double getTroque(double rpm){
-		return this.slope * rpm + this.interncept;
+		double absRPM = Math.abs(rpm);
+		double torque =  this.slope * absRPM + this.interncept;
+		return torque;
 	}
 	
 }

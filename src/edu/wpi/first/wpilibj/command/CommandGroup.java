@@ -257,6 +257,9 @@ public class CommandGroup extends Command {
         if (entry.isTimedOut()) {
           cmd._cancel();
         }
+        if(cmd.getName().equals("DriveDistance")){
+        	System.out.print("");
+        }
         if (cmd.run()) {
           break;
         } else {

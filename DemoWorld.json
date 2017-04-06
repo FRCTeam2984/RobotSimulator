@@ -52,7 +52,25 @@
 			{"x":12, "y":15}, {"x":-12, "y":15}],
 		"colliding":[{"x":-12, "y":-15}, {"x":12, "y":-15},
 			{"x":12, "y":15}, {"x":-12, "y":15}],
-		"arms":[],
+		"arms":[
+		{
+			"controllerID": 30,
+			"initialAngle": 0,
+			"mass": 10,
+			"distanceFromPivot": 5,
+			"transmissionRatio": -0.015625,
+			"torque": {
+				"slope": -0.08083804,
+				"intercept": 429.25
+			},
+			"sensor": {
+				"type": "Digital",
+				"location": "CAN",
+				"ticksPerRev": -4000
+			},
+			"limits": [ 0 , 3.141592654]
+		}
+		],
 		"wheels":[
 		{
 			"x": -10,
@@ -71,7 +89,7 @@
 			"sensor": {
 				"type": "Digital",
 				"location": "CAN",
-				"ticksPerRev": 29000
+				"ticksPerRev": -29000
 			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
@@ -92,7 +110,7 @@
 			"sensor": {
 				"type": "Digital",
 				"location": "CAN",
-				"ticksPerRev": -29000
+				"ticksPerRev": 29000
 			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
@@ -113,7 +131,7 @@
 			"sensor": {
 				"type": "Digital",
 				"location": "CAN",
-				"ticksPerRev": 29000
+				"ticksPerRev": -29000
 			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]
@@ -134,7 +152,7 @@
 			"sensor": {
 				"type": "Digital",
 				"location": "CAN",
-				"ticksPerRev": -29000
+				"ticksPerRev": 29000
 			},
 			"drawing":[{"x":-1, "y":-3}, {"x":1, "y":-3},
 			{"x":1, "y":3}, {"x":-1, "y":3}]

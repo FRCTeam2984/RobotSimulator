@@ -83,7 +83,7 @@ public class Robot implements Observer{
 		
 		for(int i = 0; i<arms.length(); i++){
 			Arm arm = new Arm(arms.getJSONObject(i));
-			this.arms.put(wheels.getJSONObject(i).getInt("controllerID"), arm);
+			this.arms.put(arms.getJSONObject(i).getInt("controllerID"), arm);
 		}
 		
 		this.drawingPath = PolygonUtils.getPathFromJson(obj.getJSONArray("drawing"));
@@ -109,7 +109,11 @@ public class Robot implements Observer{
 			this.gyroVel.setValue(Math.toDegrees(this.body.getAngularVelocity()));
 		}
 		for(MotorControllerDiscriptor controller : this.controllers){
-			this.wheels.get(controller.getId()).update((float) controller.getPower(), timeStep);
+			if(this.wheels.containsKey(controller.getId())){
+				this.wheels.get(controller.getId()).update((float) controller.getPower(), timeStep);
+			} else if(this.arms.containsKey(controller.getId())){
+				this.arms.get(controller.getId()).update(controller.getPower(), timeStep);
+			}
 		}
 	}
 	
@@ -149,6 +153,12 @@ public class Robot implements Observer{
 			if(controller.getType().equals(this.controllerType) && this.wheels.keySet().contains(controller.getId())){
 				this.controllers.add(controller);
 				SensorDiscriptor sensor = this.wheels.get(controller.getId()).getSensor();
+				if(sensor != null){
+					controller.addSensor(sensor);
+				}
+			} else if(controller.getType().equals(this.controllerType) && this.arms.keySet().contains(controller.getId())){
+				this.controllers.add(controller);
+				SensorDiscriptor sensor = this.arms.get(controller.getId()).getSensor();
 				if(sensor != null){
 					controller.addSensor(sensor);
 				}

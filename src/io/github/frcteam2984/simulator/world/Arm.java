@@ -1,6 +1,5 @@
 package io.github.frcteam2984.simulator.world;
 
-import org.jbox2d.common.Vec2;
 import org.json.JSONObject;
 
 import io.github.frcteam2984.simulator.SensorDiscriptor;
@@ -22,7 +21,6 @@ public class Arm {
 	
 	private SensorDiscriptor sensor;
 	private double ticksPerRev;
-	private double displacement;
 	
 	private double[] limits;
 	
@@ -38,6 +36,7 @@ public class Arm {
 		this.mass = obj.getDouble("mass");
 		this.distance = obj.getDouble("distanceFromPivot");
 		this.torque = new MotorPreformanceCurve(obj.getJSONObject("torque"));
+    	this.transmissionRatio = obj.getDouble("transmissionRatio");
 		this.angularVelocity = 0;
 		this.limits = new double[]{obj.getJSONArray("limits").getDouble(0), obj.getJSONArray("limits").getDouble(1)};
 		
@@ -46,7 +45,6 @@ public class Arm {
 			SensorDiscriptor.SensorType sensorType = SensorDiscriptor.SensorType.valueOf(sensor.getString("type"));
 			SensorDiscriptor.SensorLocation sensorLocation = SensorDiscriptor.SensorLocation.valueOf(sensor.getString("location"));
 			this.sensor = new SensorDiscriptor(sensorType, sensorLocation, 0, "Arm Sensor");
-			this.displacement = 0;
 			this.ticksPerRev = sensor.getDouble("ticksPerRev");
 			this.lastX = Double.NaN;
 		}
@@ -58,29 +56,37 @@ public class Arm {
 	 * @param timeStep the time which to step forward
 	 */
 	public void update(double power, double timeStep){
+//		System.out.println(this.sensor.getAnalogValue());
     	if(this.sensor != null){
-    		if(this.lastX == Float.NaN){
+    		if(Double.isNaN(this.lastX)){
     			this.lastX = this.angle;
     		}
     		double dx = this.angle - this.lastX;
     		this.lastX = this.angle;
-    		this.sensor.setValue(this.sensor.getAnalogValue() + dx * this.ticksPerRev);
+    		this.sensor.setValue(this.sensor.getAnalogValue() + dx * this.ticksPerRev / Math.PI/2);
     	}
     	double rpm = this.angularVelocity/this.transmissionRatio;
-    	double torque = power * this.torque.getTroque(rpm);
+    	double torque = power * Math.copySign(this.torque.getTroque(rpm), this.transmissionRatio);
     	
     	double deltaV = timeStep * torque / this.distance / this.mass;
     	this.angularVelocity += deltaV;
-    	this.displacement += this.angularVelocity * timeStep;
-    	if(this.displacement > this.limits[1] ){
-    		this.displacement = this.limits[1];
+    	this.angle += this.angularVelocity * timeStep;
+    	if(this.angle > this.limits[1] ){
+    		this.angle = this.limits[1];
     		this.angularVelocity = 0;
     	}
-    	if(this.displacement < this.limits[0]){
-    		this.displacement = this.limits[0];
+    	if(this.angle < this.limits[0]){
+    		this.angle = this.limits[0];
     		this.angularVelocity = 0;
     	}
     	
     }
+
+	/**
+	 * @return the sensor description of the arm
+	 */
+	public SensorDiscriptor getSensor() {
+		return this.sensor;
+	}
 	
 }

@@ -1,7 +1,6 @@
 package io.github.frcteam2984.simulator;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 

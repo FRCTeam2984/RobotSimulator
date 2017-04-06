@@ -131,7 +131,7 @@ public class Wheel {
      */
     public void update(float power, float timeStep){
     	if(this.sensor != null){
-    		if(this.lastX == Float.NaN){
+    		if(Float.isNaN(this.lastX)){
     			this.lastX = this.body.getPosition().x;
         		this.lastY = this.body.getPosition().y;
     		}
@@ -139,7 +139,6 @@ public class Wheel {
     		float dy = this.body.getPosition().y - this.lastY;
     		this.lastX = this.body.getPosition().x;
     		this.lastY = this.body.getPosition().y;
-    		Vec2 vel = this.body.getLinearVelocity();
     		double angle = 0;
     		if(dx == 0){
     			angle = Math.PI/2;
@@ -148,6 +147,9 @@ public class Wheel {
     			}
     		} else {
     			angle = Math.atan(dy / dx);
+    			if(dx < 0){
+    				angle += Math.PI;
+    			}
     		}
     		double ticksForward = -dx * Math.cos(angle) + dy * Math.sin(angle);
     		ticksForward *= this.ticksPerRev/this.diameter/Math.PI;
