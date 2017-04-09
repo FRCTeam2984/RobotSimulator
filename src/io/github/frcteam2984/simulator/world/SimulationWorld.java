@@ -116,7 +116,7 @@ public class SimulationWorld extends Observable implements VisionWorld {
 
 	@Override
 	public List<Target> getTargets() {
-		return null;
+		return this.field.getVisionTargets();
 	}
 	
 }

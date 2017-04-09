@@ -11,6 +11,9 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.json.JSONObject;
 
+import io.github.frcteam2984.simulator.vision.BasicVisionTarget;
+import io.github.frcteam2984.simulator.vision.Target;
+
 /**
  * A class to represent all of the field elements and the field as a whole. The robot will be constrained to this.
  * The field contains field elements which may have special characteristics. For example a loading station has the ability to summon an entity
@@ -27,6 +30,11 @@ public class Field {
 	private double width;
 	
 	private List<FieldElement> fieldElements;
+	
+	/**
+	 * The Retrorelective Targets
+	 */
+	private List<Target> visionTargets;
 	
 	/**
 	 * The default constructor which creates a field 54'3" long by 26'3" wide
@@ -50,6 +58,13 @@ public class Field {
 			JSONObject fieldElementJSON = (JSONObject) objectFromJson;
 			FieldElement fieldElement = new FieldElement(fieldElementJSON);
 			this.fieldElements.add(fieldElement);
+		}
+		if(json.has("targets")){
+			this.visionTargets = new ArrayList<Target>();
+			for(Object objectFromJson: json.getJSONArray("targets")){
+				JSONObject target = (JSONObject) objectFromJson;
+				this.visionTargets.add(new BasicVisionTarget(target.getDouble("x"), target.getDouble("y"), target.getDouble("angle"), target.getDouble("viewingFOV")));
+			}
 		}
 	}
 	
@@ -142,6 +157,13 @@ public class Field {
 		walls.add(new CompleteBodyDefinition(rightWall, widthWalls));
 
 		return walls;
+	}
+
+	/**
+	 * @return the Vision Targets
+	 */
+	public List<Target> getVisionTargets() {
+		return visionTargets;
 	}
 	
 }

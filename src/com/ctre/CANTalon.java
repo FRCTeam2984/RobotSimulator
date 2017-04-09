@@ -247,9 +247,6 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	}
 
 	public void set(double outputValue){
-		if(this.discriptor.getId() == 30 && outputValue == -1000){
-			System.out.println(this.encoder.getAnalogValue());
-		}
 		if(this.m_controlMode == TalonControlMode.PercentVbus){
 			this.discriptor.set(Math.max(Math.min(outputValue, 1), -1));
 		} else if(this.m_controlMode == TalonControlMode.Speed){
@@ -263,7 +260,6 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 			this.lastPIDOutput += error;
 			this.lastPIDOutput = Math.max(Math.min(lastPIDOutput, 1), -1);
 			this.discriptor.set(this.lastPIDOutput);
-			System.out.println(this.getEncPosition());
 		}
 	}
 
@@ -314,8 +310,10 @@ public class CANTalon implements MotorSafety, PIDOutput, PIDSource, GadgeteerUar
 	}
 
 	public void setEncPosition(int newPosition) {
+		double lastEncDelta = this.encoderDelta;
 		if(this.encoder != null)
 			this.encoder.setValue(newPosition);
+		this.encoderDelta = lastEncDelta;
 }
 
 	public int getEncVelocity() {

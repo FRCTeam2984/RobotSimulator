@@ -171,7 +171,6 @@ public class Wheel {
     	Vec2 fTotal = fT.add(fVel);
     	Vec2 forceRotated = new Vec2((float)(fTotal.x * Math.cos(angle) - fTotal.y * Math.sin(angle)),
     			(float) -(fTotal.x * Math.sin(angle) + fTotal.y * Math.cos(angle)));
-//	    System.out.println("(-7, 0), " + forceRotated);
     	robot.getBody().applyForce(forceRotated, this.body.getWorldPoint(new Vec2(0,0)));
     }
     
